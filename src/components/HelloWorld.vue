@@ -1,7 +1,7 @@
 <template>
   <div class="canvas-wrapper" :style="wrapperStyle">
     <!-- <p>在这里绘制canvas</p> -->
-    <timer class="timer" :style="timerStyle" :totalSecond="totalSecond" :processing="processing" :pause="pause"></timer>
+    <timer class="timer" :style="timerStyle" :currentMicrosecond="currentMicrosecond" :processing="processing" :pause="pause"></timer>
     <button @click="changeProcessing" style="position: absolute;top: 80px;left: 60px" :disabled="this.processing">开始</button>
     <button @click="changePause" style="position: absolute;top: 110px;left: 60px">暂停/继续</button>
     <canvas id="myCanvas" class="my-canvas"></canvas>
@@ -103,8 +103,8 @@ export default {
     }
   },
   computed: {
-    totalSecond() {
-      return Math.ceil(this.totalSteps * this.stepTime / 1000);
+    currentMicrosecond() {
+      return this.totalSteps * this.stepTime;
     },
     stepLength() {
       return 2 * Math.PI / this.totalSteps;
@@ -134,7 +134,9 @@ export default {
       this.processing = true;
     },
     changePause() {
-      this.pause = !this.pause;
+      if (this.processing) {
+        this.pause = !this.pause;
+      }
     },
     handlePause() {
       console.log("暂停！");

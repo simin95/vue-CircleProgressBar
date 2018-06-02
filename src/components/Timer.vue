@@ -9,7 +9,8 @@
 export default {
   name: "Timer",
   props: {
-    totalSecond: Number,
+    currentMicrosecond: Number,
+    // totalSecond: Number,
     processing: Boolean,
     pause: Boolean
   },
@@ -24,7 +25,9 @@ export default {
         this.start();
       }
     },
-    pause: function(val, oldVal) {}
+    pause: function(val, oldVal) {
+      console.log("pause change to:" + val);
+    }
   },
   computed: {
     minutes() {
