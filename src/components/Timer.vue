@@ -20,18 +20,20 @@ export default {
   },
   watch: {
     processing: function(val, oldVal) {
-      console.log(val);
-      console.log(oldVal);
       if (val === true) {
         this.start();
       }
-    }
+    },
+    pause: function(val, oldVal) {}
   },
   computed: {
     minutes() {
       if (this.currentSecond / 60 < 10 && this.currentSecond / 60 >= 0) {
         return "0" + Math.floor(this.currentSecond / 60);
-      } else if (this.currentSecond / 60 < 60 && this.currentSecond / 60 >= 10) {
+      } else if (
+        this.currentSecond / 60 < 60 &&
+        this.currentSecond / 60 >= 10
+      ) {
         return Math.floor(this.currentSecond / 60);
       } else {
         return "00";
@@ -40,7 +42,10 @@ export default {
     seconds() {
       if (this.currentSecond / 60 < 10 && this.currentSecond / 60 >= 0) {
         return "0" + this.currentSecond % 60;
-      } else if (this.currentSecond / 60 < 60 && this.currentSecond / 60 >= 10) {
+      } else if (
+        this.currentSecond / 60 < 60 &&
+        this.currentSecond / 60 >= 10
+      ) {
         return this.currentSecond % 60;
       } else {
         return "00";

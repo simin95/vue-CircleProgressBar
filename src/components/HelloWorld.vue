@@ -1,8 +1,9 @@
 <template>
-  <div class="canvas-wrapper">
-    <p>在这里绘制canvas</p>
-    <timer class="timer" :class="this.timerStyle" :totalSecond="totalSecond" :processing="processing" :pause="pause"></timer>
-    <button @click="progress" :disabled="this.processing">开始</button>
+  <div class="canvas-wrapper" :style="wrapperStyle">
+    <!-- <p>在这里绘制canvas</p> -->
+    <timer class="timer" :style="timerStyle" :totalSecond="totalSecond" :processing="processing" :pause="pause"></timer>
+    <button @click="changeProcessing" style="position: absolute;top: 80px;left: 60px" :disabled="this.processing">开始</button>
+    <button @click="changePause" style="position: absolute;top: 110px;left: 60px">暂停/继续</button>
     <canvas id="myCanvas" class="my-canvas"></canvas>
   </div>
 </template>
@@ -22,21 +23,22 @@ export default {
       stepTime: 20,
       startPosition: 0,
       endPosition: 0,
+      drawing: 0,
       processing: false,
       pause: false,
       options: {
         // 只设置canvas画布大小,进度条尽量占满，随其大小变化
-        width: 160,
-        height: 320,
+        width: 300,
+        height: 300,
         barColor: "green",
-        barWidth: 60,
+        barWidth: 16,
         backgroundColor: "yellowgreen",
         innerBackgroundColor: "#ccc",
-        textFontSize: "24px",
+        textFontSize: "48px",
         textFontFamily: "Arial",
         // 对timer组件的设置,timer组件绝对定位在父元素中，其位置使用者可通过配置占父元素的长宽百分比来得到，可控性强
-        timerPositionRow: "30%",
-        timerPositionCol: "30%"
+        timerPositionRow: 0.4,
+        timerPositionCol: 0.45
       }
     };
   },
@@ -64,7 +66,7 @@ export default {
     ctx.arc(
       this.options.width / 2,
       this.options.width / 2,
-      this.options.width / 2,
+      this.options.width / 2 + 1,
       0,
       Math.PI * 2
     );
@@ -72,19 +74,31 @@ export default {
     ctx.fill();
   },
   watch: {
-    processing: (val, oldVal) => {
+    processing: function(val, oldVal) {
+      // 向外派发事件
+      // if (val === true) {
+      //   console.log(this);
+      //   this.$emit("stateChanged", ["start"]);
+      // } else {
+      //   this.$emit("stateChanged", ["done"]);
+      // }
+      // 执行开始进度条逻辑
       if (val === true) {
-        console.log(this);
-        this.$emit("stateChanged", ["start"]);
-      } else {
-        this.$emit("stateChanged", ["done"]);
+        console.log("执行开始进度条逻辑");
+        this.progress();
       }
     },
-    pause: (val, oldVal) => {
+    pause: function(val, oldVal) {
+      // 向外派发事件
+      // if (val === true) {
+      //   this.$emit("stateChanged", ["pause"]);
+      // } else {
+      //   this.$emit("stateChanged", ["continue"]);
+      // }
       if (val === true) {
-        this.$emit("stateChanged", ["pause"]);
-      } else {
-        this.$emit("stateChanged", ["continue"]);
+        this.handlePause();
+      } else if (val === false && this.processing === true) {
+        this.progress();
       }
     }
   },
@@ -97,12 +111,35 @@ export default {
     },
     timerStyle() {
       return {
-        width: "30%",
-        height: "30%"
+        position: "absolute",
+        left:
+          (this.options.width * this.options.timerPositionRow).toString() +
+          "px",
+        top:
+          (this.options.height * this.options.timerPositionCol).toString() +
+          "px"
+        // top: "48px",
+        // left: "96px"
+      };
+    },
+    wrapperStyle() {
+      return {
+        width: this.options.width,
+        height: this.options.height
       };
     }
   },
   methods: {
+    changeProcessing() {
+      this.processing = true;
+    },
+    changePause() {
+      this.pause = !this.pause;
+    },
+    handlePause() {
+      console.log("暂停！");
+      clearInterval(this.drawing);
+    },
     progress() {
       let c = document.getElementById("myCanvas");
       let ctx = c.getContext("2d");
@@ -113,25 +150,26 @@ export default {
       ctx.arc(
         this.options.width / 2,
         this.options.width / 2,
-        this.options.width / 2,
+        this.options.width / 2 + 1,
         0,
         Math.PI * 2
       );
       ctx.fillStyle = "#ccc";
       ctx.fill();
-      // 打开进度条运行标志位，让计时器同步开始工作
-      this.processing = true;
-      var drawing = setInterval(() => {
+      // 定时绘制进度条
+      this.drawing = setInterval(() => {
         this.endPosition += this.stepLength;
         this.draw(ctx);
+        // 停止的判断及处理
         if (this.endPosition >= 2 * Math.PI) {
-          clearInterval(drawing);
+          clearInterval(this.drawing);
           console.log("----------");
-          console.log(drawing);
+          // console.log(drawing);
           this.processing = false;
           this.startPosition = 0;
           this.endPosition = 0;
         }
+        // 暂停的判断
       }, this.stepTime);
     },
     draw(ctx) {
@@ -161,6 +199,9 @@ export default {
 <style lang="stylus" scoped>
 .canvas-wrapper {
   position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
 
   .timer {
     position: absolute;
@@ -171,6 +212,7 @@ export default {
     // height: 320px;
     border: 1px solid yellowgreen;
     background: yellowgreen;
+    vertical-align: bottom;
   }
 }
 </style>
