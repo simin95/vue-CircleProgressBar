@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "Timer",
+  name: 'Timer',
   props: {
     currentMicrosecond: Number,
     processing: Boolean,
@@ -16,11 +16,11 @@ export default {
       type: Object,
       default() {
         return {
-          textFontSize: "48px",
-          textFontFamily: "Arial"
+          textFontSize: '48px',
+          textFontFamily: 'Arial',
         };
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -34,8 +34,8 @@ export default {
       }
     },
     pause: function(val, oldVal) {
-      console.log("pause change to:" + val);
-    }
+      console.log('pause change to:' + val);
+    },
   },
   computed: {
     currentSecond: {
@@ -48,38 +48,38 @@ export default {
         }
       },
       // 设置此值时执行的操作，如 vm.currentSecond = 100
-      set: function() {}
+      set: function() {},
     },
     minutes() {
       if (this.currentSecond / 60 < 10 && this.currentSecond / 60 >= 0) {
-        return "0" + Math.floor(this.currentSecond / 60);
+        return '0' + Math.floor(this.currentSecond / 60);
       } else if (
         this.currentSecond / 60 < 60 &&
         this.currentSecond / 60 >= 10
       ) {
         return Math.floor(this.currentSecond / 60);
       } else {
-        return "00";
+        return '00';
       }
     },
     seconds() {
-      if (this.currentSecond / 60 < 10 && this.currentSecond / 60 >= 0) {
-        return "0" + this.currentSecond % 60;
+      if (this.currentSecond % 60 < 10 && this.currentSecond % 60 >= 0) {
+        return '0' + this.currentSecond % 60;
       } else if (
-        this.currentSecond / 60 < 60 &&
-        this.currentSecond / 60 >= 10
+        this.currentSecond % 60 < 60 &&
+        this.currentSecond % 60 >= 10
       ) {
         return this.currentSecond % 60;
       } else {
-        return "00";
+        return '00';
       }
     },
     fontStyle() {
       return {
         fontSize: this.options.textFontSize,
-        fontFamily: this.options.textFontFamily
+        fontFamily: this.options.textFontFamily,
       };
-    }
+    },
   },
   methods: {
     start() {
@@ -87,8 +87,8 @@ export default {
         this.currentSecond--;
         if (this.currentSecond === 0) clearInterval(timer);
       }, 1000);
-    }
-  }
+    },
+  },
 };
 </script>
 

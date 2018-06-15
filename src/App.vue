@@ -10,12 +10,12 @@
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   methods: {
     handleC(arr) {
       console.log(arr);
-    }
-  }
+    },
+  },
 };
 </script>
 

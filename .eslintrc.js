@@ -28,6 +28,8 @@ module.exports = {
     'space-before-function-paren': 0,
     'semi': ['error','always'],
     "omitLastInOneLineBlock": true,
-    'quotes': ['error','double']
+    // 'quotes': ['error','double']
+    //允许多余的分号
+    // "comma-dangle": ["error", "always"]
   }
 }
