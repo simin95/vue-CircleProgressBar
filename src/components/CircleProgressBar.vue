@@ -112,7 +112,7 @@ export default {
         0,
         Math.PI * 2,
       );
-      ctx.fillStyle = '#ccc';
+      ctx.fillStyle = this.options.innerBackgroundColor;
       ctx.fill();
     });
 
@@ -132,6 +132,15 @@ export default {
         console.log('执行开始进度条逻辑');
         this.clearRect();
         this.progress();
+      } else {
+        console.log('执行结束进度条逻辑');
+        this.clearRect();
+        clearInterval(this.drawing);
+        this.drawing = 0;
+        // this.processing = false;
+        this.startPosition = 0;
+        this.endPosition = 0;
+        this.currentStep = 0;
       }
     },
     pause: function(val, oldVal) {
@@ -168,7 +177,9 @@ export default {
       return this.width;
     },
     currentMicrosecond() {
-      return (this.options.totalSteps - this.currentStep) * this.options.stepTime;
+      return (
+        (this.options.totalSteps - this.currentStep) * this.options.stepTime
+      );
     },
     stepLength() {
       return 2 * Math.PI / this.options.totalSteps;
@@ -199,7 +210,7 @@ export default {
 
     // canvas重绘函数: 清屏及重绘背景，在新绘制的进度条内容不能覆盖原来的内容时需要执行此操作，这里仅在开始绘制时调用
     clearRect() {
-      console.log('清屏及重绘背景')
+      console.log('清屏及重绘背景');
       let c = document.getElementById('myCanvas');
       let ctx = c.getContext('2d');
       ctx.clearRect(0, 0, this.width, this.height);
@@ -211,12 +222,13 @@ export default {
         0,
         Math.PI * 2,
       );
-      ctx.fillStyle = '#ccc';
+      ctx.fillStyle = this.options.innerBackgroundColor;
       ctx.fill();
     },
     handlePause() {
       console.log('暂停！');
       clearInterval(this.drawing);
+      this.drawing = 0;
     },
     progress() {
       let c = document.getElementById('myCanvas');
@@ -246,6 +258,7 @@ export default {
         // 停止的判断及处理
         if (this.endPosition >= 2 * Math.PI) {
           clearInterval(this.drawing);
+          this.drawing = 0;
           console.log('----------');
           // console.log(drawing);
           this.processing = false;

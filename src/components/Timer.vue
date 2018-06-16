@@ -27,6 +27,10 @@ export default {
       // currentSecond: 0
     };
   },
+  // created() {
+  //   // this.currentMicrosecond += 1;
+  //   this.currentSecond = Math.ceil(this.currentMicrosecond / 1000);
+  // },
   watch: {
     processing: function(val, oldVal) {
       if (val === true) {
@@ -48,7 +52,9 @@ export default {
         }
       },
       // 设置此值时执行的操作，如 vm.currentSecond = 100
-      set: function() {},
+      set: function() {
+        // this.currentSecond = Math.ceil(this.currentMicrosecond / 1000);
+      },
     },
     minutes() {
       if (this.currentSecond / 60 < 10 && this.currentSecond / 60 >= 0) {
